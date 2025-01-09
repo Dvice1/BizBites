@@ -1,0 +1,1 @@
+We revised the functionality section of our stage 1 pdf to include explicit details on how the CRUD operations will be implemented.

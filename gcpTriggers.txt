@@ -1,0 +1,17 @@
+CREATE TRIGGER before_employee_delete
+BEFORE DELETE ON Employee
+FOR EACH ROW
+BEGIN
+  IF EXISTS (SELECT 1 FROM Orders WHERE E_Id = OLD.Id) THEN
+    DELETE FROM Orders WHERE E_Id = OLD.Id;
+  END IF;
+END;
+
+CREATE TRIGGER before_business_delete
+BEFORE DELETE ON Business
+FOR EACH ROW
+BEGIN
+  IF EXISTS (SELECT 1 FROM Employee WHERE Business_Id = OLD.Id) THEN
+    DELETE FROM Employee WHERE Business_Id = OLD.Id;
+  END IF;
+END;

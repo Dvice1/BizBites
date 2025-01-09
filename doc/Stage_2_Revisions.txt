@@ -1,0 +1,4 @@
+First, we revised our UML diagram so that Deal is no longer its own entity. 
+Then we added the Product and Contain table to our relational schema.
+We also corrected the relational schema for Order and Food.
+Lastly, we revised our 3NF decomposition to follow the 3NF process from lecture.

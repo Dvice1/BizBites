@@ -1,0 +1,40 @@
+CREATE PROCEDURE getAdvancedFoodStats()
+BEGIN
+  SELECT
+    food_category,
+    AVG(calories) AS avg_calories,
+    AVG(protein) AS avg_protein,
+    COUNT(*) AS item_count,
+    AVG(price) AS avg_price
+  FROM Food
+  WHERE calories > 0
+  GROUP BY food_category
+  HAVING 
+    AVG(calories) < (SELECT AVG(calories) * 1.5 FROM Food WHERE calories > 0)
+    AND COUNT(*) > (SELECT COUNT(*)/20 FROM Food)
+  ORDER BY avg_protein DESC;
+END;
+
+CREATE PROCEDURE getHealthyOptions()
+BEGIN
+  SELECT
+    food_category,
+    COUNT(*) AS Total_Items,
+    ROUND(AVG(protein), 1) AS Avg_Protein_Grams,
+    ROUND(AVG(calories), 1) AS Avg_Calories,
+    ROUND(AVG(protein / NULLIF(calories, 0) * 100), 2) AS Avg_Protein_Calorie_Ratio,
+    ROUND(MIN(price), 2) AS Min_Price,
+    ROUND(MAX(price), 2) AS Max_Price,
+    ROUND(AVG(protein / NULLIF(price, 0)), 2) AS Protein_Price_Value
+  FROM Food
+  WHERE protein > 0
+  AND price < (
+    SELECT AVG(price) * 1.5 FROM Food
+  )
+  GROUP BY food_category
+  HAVING
+    Avg_Protein_Grams >= 10
+    AND COUNT(*) >= 2
+  ORDER BY
+    Avg_Protein_Calorie_Ratio DESC;
+END;
